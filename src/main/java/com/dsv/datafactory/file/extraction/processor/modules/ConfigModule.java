@@ -21,10 +21,23 @@ public class ConfigModule implements Module {
 	public Config provideConfig() {
 		Config config = new Config();
 
+		// those hardcoded values such as KAFKA_CLIENT_ID
+		// better to store them
+		// in a configuration file (.properties, .yaml)
+		// if they need to change per environment.
+		// and we can introduce like
+		// this class
+		// @Configuration
+		// @ConfigurationProperties(prefix = "modules")
+/*		modules:
+			kafka-client-id: kafka-id-123*/
+
+
 		config.kafkaClientId = getOrFail("KAFKA_CLIENT_ID");
 		config.kafkaGroupId = getOrFail("KAFKA_GROUP_ID");
 		config.enableKafkaSSL = getOrDefault("ENABLE_KAFKA_SSL","true");
 		config.enableRBAC = getOrDefault("ENABLE_KAFKA_RBAC","false");
+		// typo runGVInParallel
 		config.runGVInPararell = getOrDefault("RUN_GV_PARALLEL","false");
 
 		config.imageExtractionMetadataTopic = getOrFail("IMAGE_EXTRACTION_METADATA_TOPIC");
@@ -35,6 +48,9 @@ public class ConfigModule implements Module {
 
 		config.extractedDocumentTopic = getOrFail("EXTRACTED_DOCUMENTS_TOPIC");
 		config.lineServiceUrl = getOrDefault("JENKS_URI","http://aif-jenks:8005/jenks/clustering");
+		// Integer.parseInt used directly
+		// If an invalid string is passed, it will throw a NumberFormatException.
+		// surround with try catch or create more secured method
 		config.kafkaCommitIntervalMs = Integer.parseInt(getOrDefault("KAFKA_COMMIT_INTERVAL_MS", "200"));
 		config.kakfaPollIntervalMs = Integer.parseInt(getOrDefault("KAFKA_POLL_INTERVAL_MS", "1800000"));
 		config.kafkaRequestTimeoutMs = Integer.parseInt(getOrDefault("REQUEST_TIMEOUT_MS_CONFIG", "60000"));

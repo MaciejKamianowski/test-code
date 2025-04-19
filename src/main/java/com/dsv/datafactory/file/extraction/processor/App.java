@@ -28,8 +28,8 @@ public class App {
 
 
 	private void start()
-	{
-
+	{	// the opening curly bracket should be on the same level, not below, for Java language
+		// if that was C or C++ or C# code then it would be fine
 		Module modules = Modules.combine(new ConfigModule(), new StreamModule());
 		Injector injector = Guice.createInjector(modules);
 

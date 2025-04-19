@@ -1,0 +1,1 @@
+We should not store any JAR files in the source code. Those files should be downloaded automatically via Maven or Gradle.

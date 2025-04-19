@@ -1,5 +1,7 @@
 package com.dsv.datafactory.file.extraction.processor.models;
 
+// boiler plate code
+// use lombok annotation
 public class NormalizedVertices {
     private float X;
     private float Y;

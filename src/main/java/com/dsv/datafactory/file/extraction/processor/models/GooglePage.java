@@ -2,6 +2,8 @@ package com.dsv.datafactory.file.extraction.processor.models;
 
 import java.util.ArrayList;
 
+// boiler plate code
+// use lombok annotations
 public class GooglePage {
     private int width;
     private int height;

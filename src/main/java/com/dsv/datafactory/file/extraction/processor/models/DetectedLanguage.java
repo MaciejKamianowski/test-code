@@ -3,7 +3,8 @@ package com.dsv.datafactory.file.extraction.processor.models;
 public class DetectedLanguage {
     private float confidence;
     private String languageCode;
-
+    // boiler plate code
+    // use lombok annotation instead
     public DetectedLanguage(){}
 
     public DetectedLanguage(float confidence, String languageCode){

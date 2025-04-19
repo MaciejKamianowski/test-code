@@ -5,7 +5,8 @@ public class EntityAnnotation {
     private String description;
     private double confidence;
     private BoundingPoly boundingPoly;
-
+    // boiler plate code
+    // use lombok annotation instead
     public EntityAnnotation(){}
 
     public EntityAnnotation(String locale, String description, double confidence, BoundingPoly boundingPoly){

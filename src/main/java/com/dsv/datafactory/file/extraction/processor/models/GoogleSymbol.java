@@ -1,5 +1,7 @@
 package com.dsv.datafactory.file.extraction.processor.models;
 
+// boiler plate code
+// use lombok annotations
 public class GoogleSymbol {
     private TextProperty property;
     private BoundingPoly boundingBox;

@@ -2,8 +2,10 @@ package com.dsv.datafactory.file.extraction.processor.models;
 
 import java.util.ArrayList;
 
+// boiler plate code
+// use lombok annotation
 public class TextAnnotation {
-    private ArrayList<GooglePage> pages;
+    private ArrayList<GooglePage> pages;    // use List<GooglePage> pages;
     private String text;
 
     public void setPages(ArrayList<GooglePage> pages) {

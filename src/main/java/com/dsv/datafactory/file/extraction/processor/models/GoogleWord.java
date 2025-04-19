@@ -2,10 +2,12 @@ package com.dsv.datafactory.file.extraction.processor.models;
 
 import java.util.ArrayList;
 
+// boiler plate code
+// use lombok annotation
 public class GoogleWord {
     private TextProperty property;
     private BoundingPoly boundingBox;
-    private ArrayList<GoogleSymbol> symbols;
+    private ArrayList<GoogleSymbol> symbols;    // use List<GoogleSymbol> symbols;
     private double confidence;
 
     public void setConfidence(double confidence) {

@@ -2,8 +2,10 @@ package com.dsv.datafactory.file.extraction.processor.models;
 
 import java.util.ArrayList;
 
+// boiler plate code
+// use lombok annotation
 public class TextProperty {
-    private ArrayList<DetectedLanguage> detectedLanguages;
+    private ArrayList<DetectedLanguage> detectedLanguages;  // use List<DetectedLanguage> detectedLanguages;
     private DetectedBreak detectedBreak;
 
     public TextProperty(){}

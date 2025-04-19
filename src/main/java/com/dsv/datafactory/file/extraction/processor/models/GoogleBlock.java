@@ -3,6 +3,8 @@ package com.dsv.datafactory.file.extraction.processor.models;
 
 import java.util.ArrayList;
 
+// boiler plate code
+// use lombok annotations
 public class GoogleBlock {
     private TextProperty property;
     private BoundingPoly boundingBox;

@@ -5,6 +5,14 @@ public class DetectedBreak {
     private int typeValue;
     private boolean isPrefix;
 
+    // boiler plate code
+    // use lombok annotation instead
+    // @NoArgSonstructor
+    // @AllArgsConstructor
+    // @Getter
+    // @Setter
+    // or simply
+    // @Data
     public DetectedBreak(){}
 
     public DetectedBreak(String type, int typeValue, boolean isPrefix){

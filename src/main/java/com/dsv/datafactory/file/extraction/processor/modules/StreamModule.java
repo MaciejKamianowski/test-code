@@ -44,6 +44,7 @@ public class StreamModule implements Module {
 		props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, config.kafkaBootstrapServers);
 		props.put(StreamsConfig.PROCESSING_GUARANTEE_CONFIG, ConfigurationLoader.getOrDefault("KAFKA_PROCESSING_GUARANTEE", "at_least_once"));
 
+		// typo kakfaPollIntervalMs -> kafkaPollIntervalMs
 		props.put(ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG, config.kakfaPollIntervalMs);
 		props.put(ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG, config.kafkaRequestTimeoutMs);
 
@@ -54,9 +55,14 @@ public class StreamModule implements Module {
 		props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, ConfigurationLoader.getOrDefault("KAFKA_ISOLATION_LEVEL", "read_committed"));
 
 		if (ConfigurationLoader.getOrDefault("ENABLE_KAFKA_CLOUD", "true").equals("true")) {
-
+			// duplicated or better said triplicated config
 			props.put(ProducerConfig.TRANSACTION_TIMEOUT_CONFIG, ConfigurationLoader.getOrDefault("KAFKA_TRANSACTION_TIMEOUT_MS", "600000"));
 
+			// we can refactor like this
+/*			private void applyCommonKafkaConfig(Properties props) {
+				props.put(ProducerConfig.TRANSACTION_TIMEOUT_CONFIG, ConfigurationLoader.getOrDefault("KAFKA_TRANSACTION_TIMEOUT_MS", "600000"));
+				props.put(ConsumerConfig.MAX_POLL_RECORDS_CONFIG, ConfigurationLoader.getOrDefault("MAX_POLL_RECORDS_CONFIG", "1"));
+			}*/
 			// confluent kafka
 			props.put(ConsumerConfig.CLIENT_DNS_LOOKUP_CONFIG, ClientDnsLookup.USE_ALL_DNS_IPS.toString());
 
@@ -73,6 +79,14 @@ public class StreamModule implements Module {
 					"KAFKA_SSL_CIPHER_SUITE",
 					"TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA"));
 
+			// repeating the logic for configuration
+			// SSL_TRUSTSTORE_LOCATION_CONFIG
+			// extract it into private method
+			// private void applySSLConfig(Properties props, Config config) {
+			//    props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, config.kafkaTruststorePath + '/' + config.kafkaTruststoreFile);
+			//    props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, config.kafkaTruststorePassword);
+			//
+			//}
 			props.put(SslConfigs.SSL_TRUSTSTORE_LOCATION_CONFIG, ConfigurationLoader.getOrDefault("KAFKA_TRUSTSTORE_PATH", "") + '/' + ConfigurationLoader.getOrDefault("KAFKA_TRUSTSTORE_FILE", ""));
 			props.put(SslConfigs.SSL_TRUSTSTORE_PASSWORD_CONFIG, ConfigurationLoader.getOrDefault("KAFKA_TRUSTSTORE_PASSWORD", "", true));
 
@@ -117,6 +131,12 @@ public class StreamModule implements Module {
 			props.put(SslConfigs.SSL_CIPHER_SUITES_CONFIG, config.kafkaSSLCipher);
 			props.put(SslConfigs.SSL_ENDPOINT_IDENTIFICATION_ALGORITHM_CONFIG, "");
 		}
+
+		// no logging to indicate which Kafka config path is being used
+		// (SSL vs. RBAC vs. cloud).
+		// provide logging info about it
+		//logger.info("Kafka security mode: RBAC={}, SSL={}, Cloud={}", config.enableRBAC, config.enableKafkaSSL, enableCloudKafka);
+
 		return new KafkaStreams(topology, props);
 
 	}

@@ -12,7 +12,9 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
+// test classes should be package scoped
 public class CDMSerializationTest {
+    // consider extracting those value to TestUtils class
     String testPagePath = "src/test/resources/CDMFiles/page_test.json";
     String testWordPath1 = "src/test/resources/CDMFiles/word_test1.json";
     String testWordPath2 = "src/test/resources/CDMFiles/word_test2.json";
@@ -40,6 +42,7 @@ public class CDMSerializationTest {
 
     @Test
     void testWords() throws IOException {
+        // no given when then division
         ObjectMapper objectMapper = new ObjectMapper();
         Boolean condition = true;
         Word word1 = new Word();

@@ -60,8 +60,13 @@ public class GoogleOcr {
             page.setPageKey(pageKey);
             AnnotateImageResponse rawResponse = generateResponseFromImage(pathToImg);
             GoogleVisionResponse response = new OcrParser(rawResponse).parse();
+            // The use of assert(response != null) is risky
+            // asserts can be disabled at runtime
+            // provide proper null handling or using Optional
             assert(response!=null);
             GooglePage googlePage = retrieveGooglePageInformation(response);
+            // int height = page.getHeight()
+            // int width = page.getWidth();
             page.setHeight(googlePage.getHeight());
             page.setWidth(googlePage.getWidth());
             logger.info("Set page height and width " + page.getHeight() + " " + page.getWidth());
@@ -71,7 +76,11 @@ public class GoogleOcr {
             page.setRotation(getPageRotation(lines.get(0).getWords()));
             page.setLines(lines);
 
-            if(page.getRotation() != 0) correctPageCoordinates(page);
+            if(page.getRotation() != 0) correctPageCoordinates(page);   // use explicitly curly brackets
+            // better version
+/*            if(page.getRotation() != 0) {
+                correctPageCoordinates(page);
+            }*/
 
             return page;
         }
@@ -79,9 +88,11 @@ public class GoogleOcr {
             logger.error("Page either contains no text or there was error in GoogleOCR"+e.getMessage());
         }
         catch (Exception e){
-            logger.error("Error extracting OCR "+e.getMessage());
+            logger.error("Error extracting OCR "+e.getMessage());   // missing space
+
         }
-        return null;
+        return null;    // dont return null
+        // cosnider using Optional and returning empty optional if the value is not present
     }
 
     public AnnotateImageResponse generateResponseFromImage(String pathToImg) throws IOException {
@@ -249,12 +260,12 @@ public class GoogleOcr {
     }
 
      public Word generateWord(EntityAnnotation textPlusCoordinate){
-
+    // remove those comments
 //               float confidence = textPlusCoordinate.getScore();
 //                logger.info("Generating words from entity annotations");
                 String description = textPlusCoordinate.getDescription();
                 BoundingPoly bounding = textPlusCoordinate.getBoundingPoly();
-
+        // formatting, redundant tab
                 Vertices topLeft = bounding.getVertices().get(0);
                 Vertices topRight = bounding.getVertices().get(1);
                 Vertices lowRight = bounding.getVertices().get(2);
@@ -275,9 +286,10 @@ public class GoogleOcr {
                 return word;
     }
 
+    // this method can be extracted to Utils class
     public int caclulateMean(int cord1,int cord2){
         return (cord1+cord2)/2;
-    }
+    }   // missing space
 
     public List<Language> retrieveLanguagesFromPage(GooglePage googlePage){
         List<Language> languages = new ArrayList<>();
@@ -291,19 +303,20 @@ public class GoogleOcr {
     public GooglePage retrieveGooglePageInformation(GoogleVisionResponse response){
         return response.getFullTextAnnotation().getPages().get(0);
     }
-
+    // this method should return Optional<AnnotateImageResponse>
+    // to avoid NPE
     public AnnotateImageResponse retrieveAnnotatedImageResponse(List<AnnotateImageRequest> requests) throws IOException {
         try{
             ImageAnnotatorClient client = ImageAnnotatorClient.create();
             AnnotateImageResponse response = client.batchAnnotateImages(requests).getResponses(0);
             client.close();
-        return response;
+        return response;    // formatting add tab
         }
 
-        catch (Exception e){
+        catch (Exception e){    // catch should be in the same line like closing curly bracket for try block
             logger.warn(e.getMessage());
         }
-        return null;
+        return null;    // we should avoid returning null
     }
 
     public List<AnnotateImageResponse> retrieveAnnotatedImageResponseAll(List<AnnotateImageRequest> requests) throws IOException {
@@ -324,9 +337,23 @@ public class GoogleOcr {
         List<AnnotateImageRequest> requests = new ArrayList<>();
         AnnotateImageRequest request =
                 AnnotateImageRequest.newBuilder().addFeatures(feature).setImage(image).build();
+        // the methods in builder should have the names as variables and should be in separate lines
+
         requests.add(request);
         return requests;
     }
+    // better version
+    // public List<AnnotateImageRequest> generatePngRequest(Image image, Feature feature) {
+    //    AnnotateImageRequest request = buildAnnotateImageRequest(image, feature);
+    //    return Collections.singletonList(request);
+    //}
+    //
+    //private AnnotateImageRequest buildAnnotateImageRequest(Image image, Feature feature) {
+    //    return AnnotateImageRequest.newBuilder()
+    //            .addFeatures(feature)
+    //            .setImage(image)
+    //            .build();
+    //}
 
     public List<AnnotateImageRequest> bulkGeneratePngRequest(ArrayList<Image> images, Feature feature){
         return images.parallelStream().flatMap(x-> generatePngRequest(x,feature).stream()).collect(Collectors.toList());
@@ -340,6 +367,11 @@ public class GoogleOcr {
         ByteString imgBytes = ByteString.copyFrom(data);
 
         return Image.newBuilder().setContent(imgBytes).build();
+        // builder methods should not have set in name but names of variables
+        // better version
+/*        return Image.newBuilder()
+                .content(imgBytes)
+                .build();*/
     }
 
 

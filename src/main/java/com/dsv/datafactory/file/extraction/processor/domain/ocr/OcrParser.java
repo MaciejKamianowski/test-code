@@ -1,6 +1,7 @@
 package com.dsv.datafactory.file.extraction.processor.domain.ocr;
 
 import com.dsv.datafactory.file.extraction.processor.models.*;
+// redundant imports, you already are importing everything via .models.*
 import com.dsv.datafactory.file.extraction.processor.models.BoundingPoly;
 import com.dsv.datafactory.file.extraction.processor.models.EntityAnnotation;
 import com.dsv.datafactory.file.extraction.processor.models.TextAnnotation;
@@ -11,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OcrParser {
-    AnnotateImageResponse raw;
-
+    AnnotateImageResponse raw;  // name doesnt say anything
+    // more descriptive
+    // private final AnnotateImageResponse rawResponse;
     public OcrParser(AnnotateImageResponse response){
         this.raw = response;
     }
@@ -34,6 +36,9 @@ public class OcrParser {
         return parsedEntities;
     }
 
+    // if parseEntityAnnotation  method
+    // is not overridden in any of the subclasses,
+    // mark them private or final
     public EntityAnnotation parseEntityAnnotation(com.google.cloud.vision.v1.EntityAnnotation rawEntity){
         BoundingPoly parsedPoly = parseBoundingPoly(rawEntity.getBoundingPoly());
         return new EntityAnnotation(rawEntity.getLocale(), rawEntity.getDescription(), rawEntity.getConfidence(), parsedPoly);
@@ -41,7 +46,9 @@ public class OcrParser {
 
     public BoundingPoly parseBoundingPoly(com.google.cloud.vision.v1.BoundingPoly rawBoundingPoly){
         BoundingPoly parsedPoly = new BoundingPoly();
+        // List<Vertices> vertices = new ArrayList<>();
         ArrayList<Vertices> vertices = new ArrayList<>();
+        // List<NormalizedVertices> normVertices = new ArrayList<>();
         ArrayList<NormalizedVertices> normVertices = new ArrayList<>();
 
         for(Vertex rawVertex : rawBoundingPoly.getVerticesList() ){
@@ -64,7 +71,9 @@ public class OcrParser {
         return parsedTextAnnotation;
     }
 
+    // public List<GooglePage> parsePages(List<Page> rawPages){
     public ArrayList<GooglePage> parsePages(List<Page> rawPages){
+        // List<GooglePage> parsedPages = new ArrayList<>();
         ArrayList<GooglePage> parsedPages = new ArrayList<>();
 
         for(Page rawPage : rawPages){
@@ -81,9 +90,27 @@ public class OcrParser {
         return parsedPages;
     }
 
+    // we can improve this via stream API and mapping method
+    // public List<GooglePage> parsePages(List<Page> rawPages) {
+    //    return rawPages.stream()
+    //                   .map(this::mapToGooglePage)
+    //                   .collect(Collectors.toList());
+    //}
+    //
+    //private GooglePage mapToGooglePage(Page rawPage) {
+    //    GooglePage parsed = new GooglePage();
+    //    parsed.setConfidence(rawPage.getConfidence());
+    //    parsed.setHeight(rawPage.getHeight());
+    //    parsed.setWidth(rawPage.getWidth());
+    //    parsed.setBlocks(parseBlocks(rawPage.getBlocksList()));
+    //    parsed.setTextProperty(parseTextProperty(rawPage.getProperty()));
+    //    return parsed;
+    //}
     public TextProperty parseTextProperty(com.google.cloud.vision.v1.TextAnnotation.TextProperty rawTextProperty){
         TextProperty property = new TextProperty();
         ArrayList<DetectedLanguage> detectedLanguages= new ArrayList<>();
+        // rawTextProperty can be null provide Null handling either via Optional
+        // why we are using two different DetectedBreak classes in one method ?
         com.google.cloud.vision.v1.TextAnnotation.DetectedBreak rawBreak = rawTextProperty.getDetectedBreak();
         DetectedBreak detectedBreak = new DetectedBreak(rawBreak.getType().name(), rawBreak.getTypeValue(), rawBreak.getIsPrefix());
         property.setDetectedBreak(detectedBreak);
@@ -97,7 +124,9 @@ public class OcrParser {
 
 
     public ArrayList<GoogleBlock> parseBlocks(List<Block> rawBlocks){
+        // use List<> Instead of ArrayList<>
         ArrayList<GoogleBlock> blocks = new ArrayList<>();
+        // List<GoogleBlock> blocks = new ArrayList<>();
         for(Block rawBlock : rawBlocks){
             GoogleBlock block = new GoogleBlock();
             block.setBlockType(rawBlock.getBlockType().name());
